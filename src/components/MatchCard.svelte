@@ -29,36 +29,35 @@
 
   // Estado local de los inputs (se inicializa una vez desde el store).
   const initial = untrack(() => store.results[match.id]);
-  let homeVal = $state(initial ? String(initial.homeGoals) : '');
-  let awayVal = $state(initial ? String(initial.awayGoals) : '');
+  let homeVal = $state<number | null>(initial ? initial.homeGoals : null);
+  let awayVal = $state<number | null>(initial ? initial.awayGoals : null);
 
   const time = $derived(formatKickoff(match, store.tz));
   const venue = $derived(venues[match.venueId]);
   const res = $derived(store.results[match.id]);
   const bothTeams = $derived(!!homeId && !!awayId);
   const isDraw = $derived(
-    homeVal !== '' && awayVal !== '' && Number(homeVal) === Number(awayVal)
+    homeVal != null && awayVal != null && homeVal === awayVal
   );
 
   function commit() {
-    const h = homeVal.trim();
-    const a = awayVal.trim();
-    if (h === '' || a === '' || isNaN(Number(h)) || isNaN(Number(a))) {
+    if (homeVal == null || awayVal == null || isNaN(homeVal) || isNaN(awayVal)) {
       store.clearResult(match.id);
       return;
     }
     const prev = store.results[match.id];
     const shoot = isKnockout ? (prev?.shootoutWinner ?? null) : null;
-    store.setResult(match.id, Math.max(0, Number(h)), Math.max(0, Number(a)), shoot);
+    store.setResult(match.id, Math.max(0, homeVal), Math.max(0, awayVal), shoot);
   }
 
   function setShootout(side: 'home' | 'away') {
-    store.setResult(match.id, Number(homeVal), Number(awayVal), side);
+    if (homeVal == null || awayVal == null) return;
+    store.setResult(match.id, homeVal, awayVal, side);
   }
 
   function clear() {
-    homeVal = '';
-    awayVal = '';
+    homeVal = null;
+    awayVal = null;
     store.clearResult(match.id);
   }
 
@@ -159,13 +158,13 @@
 <style>
   .match {
     display: grid;
-    grid-template-columns: 78px 1fr;
+    grid-template-columns: 1fr;
     grid-template-areas:
-      'when contest'
-      'meta meta';
-    gap: 0.35rem 0.9rem;
+      'when'
+      'contest'
+      'meta';
+    gap: 0.45rem;
     padding: 0.7rem 0.85rem;
-    align-items: center;
     transition: border-color 0.15s, background 0.15s;
   }
   .match:hover { border-color: var(--line-strong); }
@@ -174,23 +173,28 @@
   .when {
     grid-area: when;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
     line-height: 1.2;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.4rem;
   }
-  .date { font-size: 0.7rem; color: var(--muted); text-transform: capitalize; }
-  .time { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .date { font-size: 0.74rem; color: var(--muted); text-transform: capitalize; }
+  .time { font-size: 0.74rem; color: var(--muted); }
 
   .contest {
     grid-area: contest;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     gap: 0.6rem;
   }
   .side { min-width: 0; }
-  .side.home { justify-self: start; }
-  .side.away { justify-self: end; text-align: right; }
+  .side :global(.team) { display: flex; max-width: 100%; }
+  .side.home :global(.team) { justify-content: flex-start; }
+  .side.away { text-align: right; }
   .side.away :global(.team) { justify-content: flex-end; }
 
   .score {
@@ -235,6 +239,7 @@
     grid-area: meta;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
     flex-wrap: wrap;
     font-size: 0.72rem;
@@ -251,7 +256,6 @@
     letter-spacing: 0.06em;
   }
   .clear {
-    margin-left: auto;
     background: transparent;
     border: none;
     color: var(--muted-2);
@@ -283,7 +287,6 @@
   .shootout button.active { background: var(--gold); color: #1a1400; border-color: var(--gold); }
 
   @media (max-width: 560px) {
-    .match { grid-template-columns: 64px 1fr; }
     .contest { gap: 0.3rem; }
     .side :global(.name) { font-size: 0.82rem; }
   }

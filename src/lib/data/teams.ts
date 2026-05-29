@@ -1,14 +1,14 @@
 import type { Team } from '../types';
 
 // Los 48 equipos del Mundial 2026, con repechajes ya resueltos
-// (Chequia → A, Bosnia y Herzegovina → B, Turquía → D, Suecia → F,
+// (Rep. Checa → A, Bosnia y Herzegovina → B, Turquía → D, Suecia → F,
 //  Irak → I, RD Congo → K).
 export const teams: Team[] = [
   // Grupo A
   { id: 'MEX', name: 'México', flag: 'MX', group: 'A' },
   { id: 'KOR', name: 'Corea del Sur', flag: 'KR', group: 'A' },
   { id: 'RSA', name: 'Sudáfrica', flag: 'ZA', group: 'A' },
-  { id: 'CZE', name: 'Chequia', flag: 'CZ', group: 'A' },
+  { id: 'CZE', name: 'Rep. Checa', flag: 'CZ', group: 'A' },
   // Grupo B
   { id: 'CAN', name: 'Canadá', flag: 'CA', group: 'B' },
   { id: 'SUI', name: 'Suiza', flag: 'CH', group: 'B' },

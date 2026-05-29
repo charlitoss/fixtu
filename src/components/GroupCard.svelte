@@ -5,6 +5,7 @@
   import { store } from '../lib/store.svelte';
   import StandingsTable from './StandingsTable.svelte';
   import MatchCard from './MatchCard.svelte';
+  import Modal from './Modal.svelte';
 
   let { group }: { group: GroupId } = $props();
 
@@ -12,7 +13,13 @@
     .filter((m) => m.group === group)
     .sort((a, b) => matchInstant(a).getTime() - matchInstant(b).getTime());
 
-  let showMatches = $state(true);
+  // Próximo partido: el primero sin resultado cargado; si están todos jugados, el último.
+  const nextMatch = $derived(
+    matches.find((m) => !store.results[m.id]) ?? matches[matches.length - 1]
+  );
+  const allPlayed = $derived(matches.every((m) => store.results[m.id]));
+
+  let showAll = $state(false);
 </script>
 
 <section class="group card">
@@ -21,23 +28,30 @@
       <span class="eyebrow">Grupo</span>
       <span class="letter">{group}</span>
     </div>
-    <button class="toggle" onclick={() => (showMatches = !showMatches)}>
-      {showMatches ? 'Ocultar partidos' : 'Ver partidos'}
+    <button class="toggle" onclick={() => (showAll = true)}>
+      Ver los {matches.length} partidos
     </button>
   </header>
 
   <StandingsTable {group} />
 
-  {#if showMatches}
-    {#key store.rev}
-      <div class="g-matches">
-        {#each matches as m (m.id)}
-          <MatchCard match={m} homeId={m.homeId} awayId={m.awayId} />
-        {/each}
-      </div>
+  <div class="g-next">
+    <span class="next-label eyebrow">{allPlayed ? 'Último partido' : 'Próximo partido'}</span>
+    {#key `${store.rev}-${nextMatch.id}`}
+      <MatchCard match={nextMatch} homeId={nextMatch.homeId} awayId={nextMatch.awayId} />
     {/key}
-  {/if}
+  </div>
 </section>
+
+<Modal bind:open={showAll} title={`Grupo ${group} · todos los partidos`}>
+  {#key store.rev}
+    <div class="g-matches">
+      {#each matches as m (m.id)}
+        <MatchCard match={m} homeId={m.homeId} awayId={m.awayId} />
+      {/each}
+    </div>
+  {/key}
+</Modal>
 
 <style>
   .group { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.8rem; }
@@ -63,5 +77,7 @@
     letter-spacing: 0.06em;
   }
   .toggle:hover { border-color: var(--line-strong); color: var(--text); }
+  .g-next { display: flex; flex-direction: column; gap: 0.4rem; }
+  .next-label { color: var(--muted-2); }
   .g-matches { display: flex; flex-direction: column; gap: 0.5rem; }
 </style>

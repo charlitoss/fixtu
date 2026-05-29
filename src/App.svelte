@@ -72,7 +72,7 @@
 </div>
 
 <style>
-  .shell { max-width: var(--maxw); margin: 0 auto; padding: 1.4rem 1.1rem 4rem; }
+  .shell { margin: 0 auto; padding: 1.4rem 1.1rem 4rem; }
 
   .topbar {
     display: flex;
