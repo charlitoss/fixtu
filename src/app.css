@@ -1,0 +1,104 @@
+:root {
+  /* Superficies */
+  --bg: #0a0d0b;
+  --bg-2: #0f1411;
+  --bg-3: #161d18;
+  --bg-hover: #1b231d;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* Texto */
+  --text: #e9efe9;
+  --muted: #8a978c;
+  --muted-2: #5f6c62;
+
+  /* Acentos */
+  --accent: #c6ff3f;      /* lima eléctrico */
+  --accent-dim: #97c92f;
+  --gold: #ffce3a;        /* eliminatorias */
+  --live: #ff4d4f;
+  --arg: #79b6e6;         /* celeste, equipo favorito */
+  --arg-glow: rgba(121, 182, 230, 0.16);
+
+  --win: #c6ff3f;
+  --draw: #ffce3a;
+  --loss: #ff7a6b;
+
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-narrow: 'Archivo Narrow', 'Archivo', sans-serif;
+  --font-body: 'Archivo', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --maxw: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-image:
+    radial-gradient(1100px 600px at 80% -10%, rgba(198, 255, 63, 0.07), transparent 60%),
+    radial-gradient(900px 500px at 0% 0%, rgba(121, 182, 230, 0.05), transparent 55%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+input, select, button { font-size: 1rem; }
+
+::selection { background: var(--accent); color: #0a0d0b; }
+
+/* Scrollbar */
+::-webkit-scrollbar { height: 10px; width: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 20px; }
+::-webkit-scrollbar-thumb:hover { background: var(--bg-hover); }
+
+/* Utilidades compartidas */
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.eyebrow {
+  font-family: var(--font-narrow);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.flag {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  line-height: 1;
+}
+
+.card {
+  background: linear-gradient(180deg, var(--bg-2), rgba(15, 20, 17, 0.6));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
