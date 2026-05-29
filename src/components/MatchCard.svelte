@@ -159,13 +159,13 @@
 <style>
   .match {
     display: grid;
-    grid-template-columns: 78px 1fr;
+    grid-template-columns: 1fr;
     grid-template-areas:
-      'when contest'
-      'meta meta';
-    gap: 0.35rem 0.9rem;
+      'when'
+      'contest'
+      'meta';
+    gap: 0.45rem;
     padding: 0.7rem 0.85rem;
-    align-items: center;
     transition: border-color 0.15s, background 0.15s;
   }
   .match:hover { border-color: var(--line-strong); }
@@ -174,17 +174,21 @@
   .when {
     grid-area: when;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
     line-height: 1.2;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.4rem;
   }
-  .date { font-size: 0.7rem; color: var(--muted); text-transform: capitalize; }
-  .time { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .date { font-size: 0.74rem; color: var(--muted); text-transform: capitalize; }
+  .time { font-size: 1rem; font-weight: 700; color: var(--text); }
 
   .contest {
     grid-area: contest;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     gap: 0.6rem;
   }
@@ -235,6 +239,7 @@
     grid-area: meta;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
     flex-wrap: wrap;
     font-size: 0.72rem;
@@ -251,7 +256,6 @@
     letter-spacing: 0.06em;
   }
   .clear {
-    margin-left: auto;
     background: transparent;
     border: none;
     color: var(--muted-2);
@@ -283,7 +287,6 @@
   .shootout button.active { background: var(--gold); color: #1a1400; border-color: var(--gold); }
 
   @media (max-width: 560px) {
-    .match { grid-template-columns: 64px 1fr; }
     .contest { gap: 0.3rem; }
     .side :global(.name) { font-size: 0.82rem; }
   }
