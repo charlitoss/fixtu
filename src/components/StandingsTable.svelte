@@ -34,8 +34,10 @@
       >
         <td class="pos mono">{row.rank}</td>
         <td class="team">
-          <span class="flag">{flagEmoji(row.team.flag)}</span>
-          <span class="name">{row.team.name}</span>
+          <div class="team-inner">
+            <span class="flag">{flagEmoji(row.team.flag)}</span>
+            <span class="name">{row.team.name}</span>
+          </div>
         </td>
         <td class="mono">{row.played}</td>
         <td class="mono">{row.won}</td>
@@ -76,16 +78,26 @@
   }
   tbody tr:last-child td { border-bottom: none; }
   .pos { color: var(--muted-2); width: 1.6rem; }
-  .team {
+  td.team {
     text-align: left;
+    color: var(--text);
+    font-weight: 600;
+    width: 100%;
+    max-width: 0;
+  }
+  .team-inner {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--text);
-    font-weight: 600;
+    min-width: 0;
   }
-  .team .flag { font-size: 1.15em; }
-  .team .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .team-inner .flag { font-size: 1.15em; flex-shrink: 0; }
+  .team-inner .name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
   .pts { color: var(--text); font-weight: 700; font-size: 0.95rem; }
   .dg { font-variant-numeric: tabular-nums; }
 

@@ -47,6 +47,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     letter-spacing: -0.01em;
+    min-width: 0;
   }
   .name.muted { color: var(--muted); }
   .sm .name { font-size: 0.86rem; }
