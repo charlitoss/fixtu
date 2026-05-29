@@ -2,17 +2,15 @@
   import { store } from './lib/store.svelte';
   import TimezoneSelector from './components/TimezoneSelector.svelte';
   import FavoriteSelector from './components/FavoriteSelector.svelte';
-  import GroupsView from './components/GroupsView.svelte';
-  import CalendarView from './components/CalendarView.svelte';
+  import OverviewView from './components/OverviewView.svelte';
   import TeamView from './components/TeamView.svelte';
   import BracketView from './components/BracketView.svelte';
 
-  type Tab = 'grupos' | 'calendario' | 'equipo' | 'llave';
-  let tab = $state<Tab>('grupos');
+  type Tab = 'fixture' | 'equipo' | 'llave';
+  let tab = $state<Tab>('fixture');
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'grupos', label: 'Grupos' },
-    { id: 'calendario', label: 'Calendario' },
+    { id: 'fixture', label: 'Grupos y calendario' },
     { id: 'equipo', label: 'Por equipo' },
     { id: 'llave', label: 'Llave' }
   ];
@@ -55,10 +53,8 @@
   </nav>
 
   <main class="content">
-    {#if tab === 'grupos'}
-      <GroupsView />
-    {:else if tab === 'calendario'}
-      <CalendarView />
+    {#if tab === 'fixture'}
+      <OverviewView />
     {:else if tab === 'equipo'}
       <TeamView />
     {:else if tab === 'llave'}
