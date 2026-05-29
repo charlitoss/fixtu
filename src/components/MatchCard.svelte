@@ -183,7 +183,7 @@
     padding-bottom: 0.4rem;
   }
   .date { font-size: 0.74rem; color: var(--muted); text-transform: capitalize; }
-  .time { font-size: 1rem; font-weight: 700; color: var(--text); }
+  .time { font-size: 0.74rem; color: var(--muted); }
 
   .contest {
     grid-area: contest;
@@ -193,8 +193,9 @@
     gap: 0.6rem;
   }
   .side { min-width: 0; }
-  .side.home { justify-self: start; }
-  .side.away { justify-self: end; text-align: right; }
+  .side :global(.team) { display: flex; max-width: 100%; }
+  .side.home :global(.team) { justify-content: flex-start; }
+  .side.away { text-align: right; }
   .side.away :global(.team) { justify-content: flex-end; }
 
   .score {
