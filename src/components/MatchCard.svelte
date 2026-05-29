@@ -29,36 +29,35 @@
 
   // Estado local de los inputs (se inicializa una vez desde el store).
   const initial = untrack(() => store.results[match.id]);
-  let homeVal = $state(initial ? String(initial.homeGoals) : '');
-  let awayVal = $state(initial ? String(initial.awayGoals) : '');
+  let homeVal = $state<number | null>(initial ? initial.homeGoals : null);
+  let awayVal = $state<number | null>(initial ? initial.awayGoals : null);
 
   const time = $derived(formatKickoff(match, store.tz));
   const venue = $derived(venues[match.venueId]);
   const res = $derived(store.results[match.id]);
   const bothTeams = $derived(!!homeId && !!awayId);
   const isDraw = $derived(
-    homeVal !== '' && awayVal !== '' && Number(homeVal) === Number(awayVal)
+    homeVal != null && awayVal != null && homeVal === awayVal
   );
 
   function commit() {
-    const h = homeVal.trim();
-    const a = awayVal.trim();
-    if (h === '' || a === '' || isNaN(Number(h)) || isNaN(Number(a))) {
+    if (homeVal == null || awayVal == null || isNaN(homeVal) || isNaN(awayVal)) {
       store.clearResult(match.id);
       return;
     }
     const prev = store.results[match.id];
     const shoot = isKnockout ? (prev?.shootoutWinner ?? null) : null;
-    store.setResult(match.id, Math.max(0, Number(h)), Math.max(0, Number(a)), shoot);
+    store.setResult(match.id, Math.max(0, homeVal), Math.max(0, awayVal), shoot);
   }
 
   function setShootout(side: 'home' | 'away') {
-    store.setResult(match.id, Number(homeVal), Number(awayVal), side);
+    if (homeVal == null || awayVal == null) return;
+    store.setResult(match.id, homeVal, awayVal, side);
   }
 
   function clear() {
-    homeVal = '';
-    awayVal = '';
+    homeVal = null;
+    awayVal = null;
     store.clearResult(match.id);
   }
 
