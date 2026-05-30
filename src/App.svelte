@@ -18,6 +18,15 @@
     return () => mq.removeEventListener('change', update);
   });
 
+  // El fondo del header solo aparece al hacer scroll (en el tope no hace falta).
+  let scrolled = $state(false);
+  $effect(() => {
+    const onScroll = () => (scrolled = window.scrollY > 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  });
+
   // Al cambiar de layout, normalizamos la pestaña activa entre los dos esquemas.
   $effect(() => {
     if (isMobile && tab === 'fixture') tab = 'grupos';
@@ -41,7 +50,7 @@
 </script>
 
 <div class="shell">
-  <header class="topbar">
+  <header class="topbar" class:scrolled>
     <img class="logo" src="/world-cup-logo.svg" alt="Mundial 2026" />
 
     <nav class="tabs">
@@ -86,6 +95,11 @@
     position: sticky;
     top: 0;
     z-index: 20;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.2s ease;
+  }
+  .topbar.scrolled {
     background: linear-gradient(180deg, var(--bg) 78%, transparent);
   }
   .logo {
