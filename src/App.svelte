@@ -2,20 +2,43 @@
   import { store } from './lib/store.svelte';
   import TimezoneSelector from './components/TimezoneSelector.svelte';
   import FavoriteSelector from './components/FavoriteSelector.svelte';
+  import OverviewView from './components/OverviewView.svelte';
   import GroupsView from './components/GroupsView.svelte';
   import CalendarView from './components/CalendarView.svelte';
   import TeamView from './components/TeamView.svelte';
   import BracketView from './components/BracketView.svelte';
 
-  type Tab = 'grupos' | 'calendario' | 'equipo' | 'llave';
-  let tab = $state<Tab>('grupos');
+  type Tab = 'fixture' | 'grupos' | 'calendario' | 'equipo' | 'llave';
+  let tab = $state<Tab>('fixture');
 
-  const tabs: { id: Tab; label: string }[] = [
+  // En mobile no entra la vista combinada: separamos grupos y calendario en pestañas.
+  let isMobile = $state(false);
+  $effect(() => {
+    const mq = window.matchMedia('(max-width: 720px)');
+    const update = () => (isMobile = mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  });
+
+  // Al cambiar de layout, normalizamos la pestaña activa entre los dos esquemas.
+  $effect(() => {
+    if (isMobile && tab === 'fixture') tab = 'grupos';
+    else if (!isMobile && (tab === 'grupos' || tab === 'calendario')) tab = 'fixture';
+  });
+
+  const desktopTabs: { id: Tab; label: string }[] = [
+    { id: 'fixture', label: 'Grupos y calendario' },
+    { id: 'equipo', label: 'Por equipo' },
+    { id: 'llave', label: 'Llave' }
+  ];
+  const mobileTabs: { id: Tab; label: string }[] = [
     { id: 'grupos', label: 'Grupos' },
     { id: 'calendario', label: 'Calendario' },
     { id: 'equipo', label: 'Por equipo' },
     { id: 'llave', label: 'Llave' }
   ];
+  const tabs = $derived(isMobile ? mobileTabs : desktopTabs);
 
   function reset() {
     if (confirm('¿Borrar todos los resultados cargados? Esta acción no se puede deshacer.')) {
@@ -55,7 +78,9 @@
   </nav>
 
   <main class="content">
-    {#if tab === 'grupos'}
+    {#if tab === 'fixture'}
+      <OverviewView />
+    {:else if tab === 'grupos'}
       <GroupsView />
     {:else if tab === 'calendario'}
       <CalendarView />
