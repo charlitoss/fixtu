@@ -50,14 +50,4 @@
     background: var(--accent);
     box-shadow: 0 0 10px var(--accent);
   }
-
-  @media (max-width: 900px) {
-    .overview { grid-template-columns: 1fr; }
-    .cal-col {
-      position: static;
-      max-height: none;
-      overflow: visible;
-      padding-right: 0;
-    }
-  }
 </style>
