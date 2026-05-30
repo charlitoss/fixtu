@@ -5,6 +5,7 @@
   import { store } from '../lib/store.svelte';
   import StandingsTable from './StandingsTable.svelte';
   import MatchCard from './MatchCard.svelte';
+  import NextMatchCard from './NextMatchCard.svelte';
   import Modal from './Modal.svelte';
 
   let { group }: { group: GroupId } = $props();
@@ -35,7 +36,7 @@
   <div class="g-next">
     <span class="next-label eyebrow">{allPlayed ? 'Último partido' : 'Próximo partido'}</span>
     {#key `${store.rev}-${nextMatch.id}`}
-      <MatchCard match={nextMatch} homeId={nextMatch.homeId} awayId={nextMatch.awayId} />
+      <NextMatchCard match={nextMatch} />
     {/key}
   </div>
 </section>
