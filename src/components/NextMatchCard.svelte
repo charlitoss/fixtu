@@ -11,12 +11,14 @@
   const away = $derived(match.awayId ? teamsById[match.awayId] : undefined);
   const time = $derived(formatKickoff(match, store.tz));
 
-  // "dd/mm XXhrs" — incluye minutos solo si no son :00 (p. ej. 19:30hrs).
+  const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+  // "JUN 8 - XXhrs" — incluye minutos solo si no son :00 (p. ej. 19:30hrs).
   const when = $derived.by(() => {
     const [, mo, da] = time.dayKey.split('-');
     const [hh, mm] = time.time.split(':');
     const hourLabel = mm === '00' ? `${hh}hrs` : `${hh}:${mm}hrs`;
-    return `${da}/${mo} ${hourLabel}`;
+    return `${MONTHS[Number(mo) - 1]} ${Number(da)} - ${hourLabel}`;
   });
 </script>
 
