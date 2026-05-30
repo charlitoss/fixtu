@@ -24,10 +24,7 @@
 
 <section class="group card">
   <header class="g-head">
-    <div class="g-id">
-      <span class="eyebrow">Grupo</span>
-      <span class="letter">{group}</span>
-    </div>
+    <span class="g-tag">Grupo {group}</span>
     <button class="toggle" onclick={() => (showAll = true)}>
       Ver los {matches.length} partidos
     </button>
@@ -56,14 +53,16 @@
 <style>
   .group { padding: 0.9rem; display: flex; flex-direction: column; gap: 0.8rem; }
   .g-head { display: flex; align-items: center; justify-content: space-between; }
-  .g-id { display: flex; align-items: baseline; gap: 0.55rem; }
-  .letter {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 1.8rem;
-    line-height: 1;
+  .g-tag {
     color: var(--accent);
-    letter-spacing: -0.03em;
+    border: 1px solid rgba(198, 255, 63, 0.25);
+    border-radius: 20px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.74rem;
+    font-family: var(--font-narrow);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
   .toggle {
     background: transparent;
