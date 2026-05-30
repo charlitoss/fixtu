@@ -14,7 +14,7 @@
   // En mobile no entra la vista combinada: separamos grupos y calendario en pestañas.
   let isMobile = $state(false);
   $effect(() => {
-    const mq = window.matchMedia('(max-width: 900px)');
+    const mq = window.matchMedia('(max-width: 720px)');
     const update = () => (isMobile = mq.matches);
     update();
     mq.addEventListener('change', update);
