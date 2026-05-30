@@ -21,8 +21,10 @@
     border: 1px solid var(--line);
     border-radius: 20px;
     padding: 0.3rem 0.7rem;
+    min-width: 0;
+    max-width: 100%;
   }
-  .ico { font-size: 0.9rem; }
+  .ico { font-size: 0.9rem; flex-shrink: 0; }
   select {
     background: transparent;
     border: none;
@@ -30,6 +32,8 @@
     font-size: 0.82rem;
     font-weight: 600;
     font-family: var(--font-narrow);
+    min-width: 0;
+    max-width: 100%;
   }
   select:focus { outline: none; }
   select option { background: var(--bg-2); color: var(--text); font-family: var(--font-body); }

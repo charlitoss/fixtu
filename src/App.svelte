@@ -1,14 +1,11 @@
 <script lang="ts">
   import { store } from './lib/store.svelte';
   import TimezoneSelector from './components/TimezoneSelector.svelte';
-  import FavoriteSelector from './components/FavoriteSelector.svelte';
   import OverviewView from './components/OverviewView.svelte';
   import GroupsView from './components/GroupsView.svelte';
   import CalendarView from './components/CalendarView.svelte';
-  import TeamView from './components/TeamView.svelte';
-  import BracketView from './components/BracketView.svelte';
 
-  type Tab = 'fixture' | 'grupos' | 'calendario' | 'equipo' | 'llave';
+  type Tab = 'fixture' | 'grupos' | 'calendario';
   let tab = $state<Tab>('fixture');
 
   // En mobile no entra la vista combinada: separamos grupos y calendario en pestañas.
@@ -28,15 +25,11 @@
   });
 
   const desktopTabs: { id: Tab; label: string }[] = [
-    { id: 'fixture', label: 'Grupos y calendario' },
-    { id: 'equipo', label: 'Por equipo' },
-    { id: 'llave', label: 'Llave' }
+    { id: 'fixture', label: 'Grupos y calendario' }
   ];
   const mobileTabs: { id: Tab; label: string }[] = [
     { id: 'grupos', label: 'Grupos' },
-    { id: 'calendario', label: 'Calendario' },
-    { id: 'equipo', label: 'Por equipo' },
-    { id: 'llave', label: 'Llave' }
+    { id: 'calendario', label: 'Calendario' }
   ];
   const tabs = $derived(isMobile ? mobileTabs : desktopTabs);
 
@@ -49,33 +42,21 @@
 
 <div class="shell">
   <header class="topbar">
-    <div class="brand">
-      <div class="logo">
-        <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
-          <circle cx="16" cy="16" r="13" fill="none" stroke="var(--accent)" stroke-width="2" />
-          <path d="M16 7l3.8 2.8-1.45 4.5h-4.7L12.2 9.8z" fill="var(--accent)" />
-        </svg>
-      </div>
-      <div class="titles">
-        <span class="kicker eyebrow">FIFA · USA · Canadá · México</span>
-        <h1>Mundial <span class="year">2026</span> <span class="sub">Fixture</span></h1>
-      </div>
-    </div>
+    <img class="logo" src="/world-cup-logo.svg" alt="Mundial 2026" />
+
+    <nav class="tabs">
+      {#each tabs as t}
+        <button class="tab" class:active={tab === t.id} onclick={() => (tab = t.id)}>
+          {t.label}
+        </button>
+      {/each}
+    </nav>
 
     <div class="controls">
-      <FavoriteSelector />
       <TimezoneSelector />
       <button class="reset" onclick={reset} title="Borrar resultados">Reiniciar</button>
     </div>
   </header>
-
-  <nav class="tabs">
-    {#each tabs as t}
-      <button class="tab" class:active={tab === t.id} onclick={() => (tab = t.id)}>
-        {t.label}
-      </button>
-    {/each}
-  </nav>
 
   <main class="content">
     {#if tab === 'fixture'}
@@ -84,10 +65,6 @@
       <GroupsView />
     {:else if tab === 'calendario'}
       <CalendarView />
-    {:else if tab === 'equipo'}
-      <TeamView />
-    {:else if tab === 'llave'}
-      <BracketView />
     {/if}
   </main>
 
@@ -100,43 +77,36 @@
   .shell { margin: 0 auto; padding: 1.4rem 1.1rem 4rem; }
 
   .topbar {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.3rem;
-  }
-  .brand { display: flex; align-items: center; gap: 0.8rem; }
-  .logo {
     display: grid;
-    place-items: center;
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 0.4rem;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.6rem;
+    padding: 0.6rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
   }
-  .titles { display: flex; flex-direction: column; gap: 0.15rem; }
-  .kicker { color: var(--muted-2); }
-  h1 {
-    font-size: clamp(1.6rem, 4vw, 2.3rem);
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+  /* Blur progresivo: pleno arriba del header, nulo abajo. Va detrás del contenido. */
+  .topbar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
   }
-  .year { color: var(--accent); }
-  .sub {
-    font-family: var(--font-narrow);
-    font-weight: 700;
-    color: var(--muted);
-    font-size: 0.5em;
-    letter-spacing: 0.1em;
-    vertical-align: 0.3em;
-    margin-left: 0.2em;
+  .logo {
+    height: 46px;
+    width: auto;
+    display: block;
+    justify-self: start;
   }
 
-  .controls { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .controls { display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; justify-self: end; }
   .reset {
     background: transparent;
     border: 1px solid var(--line);
@@ -157,12 +127,7 @@
     border: 1px solid var(--line);
     border-radius: 30px;
     padding: 0.3rem;
-    margin-bottom: 1.6rem;
-    position: sticky;
-    top: 0.6rem;
-    z-index: 10;
-    backdrop-filter: blur(8px);
-    width: fit-content;
+    justify-self: center;
     max-width: 100%;
     overflow-x: auto;
   }
@@ -191,8 +156,18 @@
     line-height: 1.5;
   }
 
-  @media (max-width: 560px) {
-    .topbar { align-items: flex-start; }
-    .controls { width: 100%; }
+  @media (max-width: 640px) {
+    .topbar {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'logo'
+        'tabs'
+        'controls';
+      justify-items: center;
+      row-gap: 0.8rem;
+    }
+    .logo { grid-area: logo; height: 40px; justify-self: center; }
+    .tabs { grid-area: tabs; }
+    .controls { grid-area: controls; justify-self: center; justify-content: center; }
   }
 </style>

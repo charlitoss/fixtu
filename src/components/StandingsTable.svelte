@@ -30,7 +30,6 @@
       <tr
         class:qualify={row.rank <= 2}
         class:third={row.rank === 3}
-        class:fav={store.favorite === row.team.id}
       >
         <td class="pos mono">{row.rank}</td>
         <td class="team">
@@ -117,8 +116,6 @@
     background: var(--accent);
   }
   tr.third .pos { color: var(--gold); }
-  tr.fav td { background: var(--arg-glow); }
-  tr.fav .name { color: var(--arg); }
 
   @media (max-width: 560px) {
     .hide-sm { display: none; }

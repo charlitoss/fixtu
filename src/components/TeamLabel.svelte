@@ -1,7 +1,6 @@
 <script lang="ts">
   import { teamsById } from '../lib/data/teams';
   import { flagEmoji } from '../lib/flags';
-  import { store } from '../lib/store.svelte';
 
   let {
     teamId,
@@ -18,10 +17,9 @@
   } = $props();
 
   const team = $derived(teamId ? teamsById[teamId] : undefined);
-  const isFav = $derived(!!team && store.favorite === team.id);
 </script>
 
-<span class="team {align} {size}" class:fav={isFav} class:placeholder={!team}>
+<span class="team {align} {size}" class:placeholder={!team}>
   {#if align === 'right'}
     <span class="name" class:muted>{team ? team.name : placeholder}</span>
     <span class="flag" class:empty={!team}>{team ? flagEmoji(team.flag) : '⚪'}</span>
@@ -54,13 +52,4 @@
   .sm .flag { font-size: 1.1em; }
   .lg .name { font-size: 1.15rem; font-weight: 700; }
   .placeholder .name { color: var(--muted-2); font-style: italic; font-weight: 500; }
-
-  .team.fav .name { color: var(--arg); }
-  .team.fav .name::after {
-    content: '★';
-    margin-left: 0.4em;
-    font-size: 0.7em;
-    color: var(--arg);
-    vertical-align: 0.1em;
-  }
 </style>

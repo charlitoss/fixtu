@@ -6,12 +6,11 @@ const STORAGE_KEY = 'wc2026-fixture-v1';
 interface Persisted {
   results: Record<number, Result>;
   knockoutTeams: Record<string, string>;
-  favorite: string | null;
   tzId: string;
 }
 
 function loadPersisted(): Persisted {
-  const fallback: Persisted = { results: {}, knockoutTeams: {}, favorite: 'ARG', tzId: 'arg' };
+  const fallback: Persisted = { results: {}, knockoutTeams: {}, tzId: 'arg' };
   if (typeof localStorage === 'undefined') return fallback;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -20,7 +19,6 @@ function loadPersisted(): Persisted {
     return {
       results: parsed.results ?? {},
       knockoutTeams: parsed.knockoutTeams ?? {},
-      favorite: parsed.favorite ?? null,
       tzId: parsed.tzId ?? 'arg'
     };
   } catch {
@@ -32,7 +30,6 @@ class FixtureStore {
   results = $state<Record<number, Result>>({});
   /** clave `${matchId}:home|away` -> teamId, sólo para slots editables (R32) */
   knockoutTeams = $state<Record<string, string>>({});
-  favorite = $state<string | null>(null);
   tzId = $state<string>('arg');
   /** se incrementa al resetear, para forzar el remount de inputs de resultado */
   rev = $state<number>(0);
@@ -41,7 +38,6 @@ class FixtureStore {
     const p = loadPersisted();
     this.results = p.results;
     this.knockoutTeams = p.knockoutTeams;
-    this.favorite = p.favorite;
     this.tzId = p.tzId;
 
     // Autoguardado ante cualquier cambio
@@ -50,7 +46,6 @@ class FixtureStore {
         const snapshot: Persisted = {
           results: this.results,
           knockoutTeams: this.knockoutTeams,
-          favorite: this.favorite,
           tzId: this.tzId
         };
         try {
@@ -83,10 +78,6 @@ class FixtureStore {
     } else {
       this.knockoutTeams = { ...this.knockoutTeams, [key]: teamId };
     }
-  }
-
-  setFavorite(teamId: string | null) {
-    this.favorite = teamId;
   }
 
   resetAll() {
