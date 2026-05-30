@@ -44,19 +44,19 @@
   <header class="topbar">
     <img class="logo" src="/world-cup-logo.svg" alt="Mundial 2026" />
 
+    <nav class="tabs">
+      {#each tabs as t}
+        <button class="tab" class:active={tab === t.id} onclick={() => (tab = t.id)}>
+          {t.label}
+        </button>
+      {/each}
+    </nav>
+
     <div class="controls">
       <TimezoneSelector />
       <button class="reset" onclick={reset} title="Borrar resultados">Reiniciar</button>
     </div>
   </header>
-
-  <nav class="tabs">
-    {#each tabs as t}
-      <button class="tab" class:active={tab === t.id} onclick={() => (tab = t.id)}>
-        {t.label}
-      </button>
-    {/each}
-  </nav>
 
   <main class="content">
     {#if tab === 'fixture'}
@@ -77,19 +77,25 @@
   .shell { margin: 0 auto; padding: 1.4rem 1.1rem 4rem; }
 
   .topbar {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.3rem;
+    margin-bottom: 1.6rem;
+    padding: 0.6rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(180deg, var(--bg) 78%, transparent);
   }
   .logo {
-    height: 92px;
+    height: 46px;
     width: auto;
     display: block;
+    justify-self: start;
   }
 
-  .controls { display: flex; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap; }
+  .controls { display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; justify-self: end; }
   .reset {
     background: transparent;
     border: 1px solid var(--line);
@@ -110,12 +116,7 @@
     border: 1px solid var(--line);
     border-radius: 30px;
     padding: 0.3rem;
-    margin: 0 auto 1.6rem;
-    position: sticky;
-    top: 0.6rem;
-    z-index: 10;
-    backdrop-filter: blur(8px);
-    width: fit-content;
+    justify-self: center;
     max-width: 100%;
     overflow-x: auto;
   }
@@ -144,7 +145,18 @@
     line-height: 1.5;
   }
 
-  @media (max-width: 560px) {
-    .logo { height: 76px; }
+  @media (max-width: 640px) {
+    .topbar {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'logo'
+        'tabs'
+        'controls';
+      justify-items: center;
+      row-gap: 0.8rem;
+    }
+    .logo { grid-area: logo; height: 40px; justify-self: center; }
+    .tabs { grid-area: tabs; }
+    .controls { grid-area: controls; justify-self: center; justify-content: center; }
   }
 </style>
